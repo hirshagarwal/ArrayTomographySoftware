@@ -60,15 +60,19 @@ for i = 1:1:(cropsN) % Will iterate through the height of the image
             for k = 1:1:3 % Run through each of the 3 layers of the image
                 % Weight the current crop
                 weight = weigh(currentCrop(:,:,k));
-                weight = darkFilter(currentCrop(:, :, k));
+                darkWeight = darkFilter(currentCrop(:, :, k));
                 % Show the crop
                 imshow(currentCrop(:,:,k));
                 drawnow;
                 if weight>hWeight
                     hWeight = weight;
                 end
+                if darkWeight > hDarkWeight
+                    hDarkWeight = darkWeight;
+                end
             end
-            weights(i, j) = weight; % Set the weight in the matrix to the highest weight    
+            weights(i, j) = hWeight; % Set the weight in the matrix to the highest weight    
+            hDarkWeight(i, j) = hDarkWeight;
                 
     end
 end
