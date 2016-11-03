@@ -36,9 +36,6 @@ function y = Crop(flatPath, handles)
     end
     hold off;
     
-    % Set the figure to the alternate one
-    axes(handles.secondFigure);
-    
     % Filter Out Edges
         % TODO Make this method more intelligent
     % Sets the size of the matrix that will hold all of the crops
@@ -56,7 +53,7 @@ for i = 1:1:(cropsN) % Will iterate through the height of the image
         % Choose pixels for the current crop
         currentCropPix = [100*currentCropNum(1)-99, 100*currentCropNum(1); 100*currentCropNum(2)-99, 100*currentCropNum(2)];
         % Select the currrent crop and store in tensor
-        currentCrop = flattened(currentCropPix(1,1):currentCropPix(1,2), currentCropPix(2,1):currentCropPix(2,2), :);
+        currentCrop = flattened(currentCropPix(1,1):currentCropPix(1,2), currentCropPix(2,1):currentCropPix(2,2));
         % Run filter on current crop
             hWeight = 0; % This is the highest weight of the three crops layers
             hDarkWeight = 0;
@@ -65,7 +62,7 @@ for i = 1:1:(cropsN) % Will iterate through the height of the image
                 weight = weigh(currentCrop(:,:,k));
                 darkWeight = darkFilter(currentCrop(:, :, k));
                 % Show the crop
-                imshow(currentCrop(:,:,:));
+                imshow(currentCrop(:,:,k));
                 drawnow;
                 if weight>hWeight
                     hWeight = weight;
@@ -86,19 +83,13 @@ cropped = flattened; % Get the base image to edit
 cropList = [];
 for i = 1:1:size(weights, 1)
     for j = 1:1:size(weights, 2)
-        currentCrop = cropped((i*100)-99:(i*100), ((j*100)-99):(j*100));
-        if weights(i,j) >=4 || darkWeights(i, j) > 10
+        if(weights(i,j) >=4 && darkWeights(i, j) < 10
             remove = [(i*100)-99, (i*100); (j*100)-99, (j*100)];
-            imshow(currentCrop);
-            cropped(remove(1,1):remove(1,2), remove(2,1):remove(2,2), :) = 0;
-        else
-            coordinates = strcat(num2str(i), ', ', num2str(j));
-            cropList = [cropList; [i, j]];
+            cropped(remove(1,1):remove(1,2), remove(2,1
         end
     end
 end
 
-imshow(cropped);
     
     
 end
