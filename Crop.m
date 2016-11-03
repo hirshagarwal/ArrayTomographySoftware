@@ -8,6 +8,18 @@ function y = Crop(flatPath, handles)
     % Read the image
     flattened = imread(flatPath);
     
+     % Filter Out Edges
+        % TODO Make this method more intelligent
+    cropX = size(flattened, 1);    
+    cropY = size(flattened, 2);
+    sizeX = floor(cropX/100)*100;
+    sizeY = floor(cropY/100)*100;
+    % Sets the size of the matrix that will hold all of the crops
+    cropsM = sizeX/100;
+    cropsN = sizeY/100;
+    
+    flattened = flattened(1:sizeX+1, 1:sizeY+1, :);
+    
     % Show the base image
     imshow(flattened);
     
@@ -15,7 +27,7 @@ function y = Crop(flatPath, handles)
     imM = size(flattened, 1); % Image Rows
     imN = size(flattened, 2); % Image Cols
     
-    % Superimpose Grid
+        % Superimpose Grid
     gridSize = round(imM/10, -2);
     
     % Display Grid
@@ -39,12 +51,6 @@ function y = Crop(flatPath, handles)
     % Set the figure to the alternate one
     axes(handles.secondFigure);
     
-    % Filter Out Edges
-        % TODO Make this method more intelligent
-    % Sets the size of the matrix that will hold all of the crops
-    cropsM = 1300/gridSize;
-    cropsN = 1000/gridSize;
-    
     % Create the matrix to hold the weights
     weights = zeros(cropsN, cropsM); % For the weights of light areas
     darkWeights = zeros(cropsN, cropsM); % For the weights of dark areas
@@ -59,23 +65,19 @@ for i = 1:1:(cropsN) % Will iterate through the height of the image
         currentCrop = flattened(currentCropPix(1,1):currentCropPix(1,2), currentCropPix(2,1):currentCropPix(2,2), :);
         % Run filter on current crop
             hWeight = 0; % This is the highest weight of the three crops layers
-            hDarkWeight = 0;
             for k = 1:1:3 % Run through each of the 3 layers of the image
                 % Weight the current crop
                 weight = weigh(currentCrop(:,:,k));
-                darkWeight = darkFilter(currentCrop(:, :, k));
                 % Show the crop
                 imshow(currentCrop(:,:,:));
                 drawnow;
                 if weight>hWeight
                     hWeight = weight;
                 end
-                if darkWeight > hDarkWeight
-                    hDarkWeight = darkWeight;
-                end
             end
+            darkWeight = darkFilter(currentCrop(:, :, :)); % Weigh the darkness
             weights(i, j) = hWeight; % Set the weight in the matrix to the highest weight    
-            darkWeights(i, j) = hDarkWeight;
+            darkWeights(i, j) = darkWeight;
                 
     end
 end
@@ -86,8 +88,10 @@ cropped = flattened; % Get the base image to edit
 cropList = [];
 for i = 1:1:size(weights, 1)
     for j = 1:1:size(weights, 2)
-        currentCrop = cropped((i*100)-99:(i*100), ((j*100)-99):(j*100));
+        currentCrop = cropped((i*100)-99:(i*100), ((j*100)-99):(j*100), :);
         if weights(i,j) >=4 || darkWeights(i, j) > 10
+            darkWeight = darkWeights(i,j);
+            lightWeight = weights(i, j);
             remove = [(i*100)-99, (i*100); (j*100)-99, (j*100)];
             imshow(currentCrop);
             cropped(remove(1,1):remove(1,2), remove(2,1):remove(2,2), :) = 0;
