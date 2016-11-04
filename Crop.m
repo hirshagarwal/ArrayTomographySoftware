@@ -123,9 +123,9 @@ hold on;
 % Generate string list of crops
 cropListString = '';
 for i = 1:1:size(cropList, 1)
-    cropListString = strcat(cropListString, '(',num2str(cropList(i, 1)),',',num2str(cropList(i, 2)), ')');
+    cropListString = strcat(cropListString, '(',num2str(cropList(i, 1)),',',num2str(cropList(i, 2)), ');');
 end
 % Output the list of crops    
 set(handles.cropsText, 'string', cropListString);
-    
+
 end
