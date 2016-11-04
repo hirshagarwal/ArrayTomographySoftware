@@ -1,5 +1,5 @@
 function y = outputCrops(handles)
-
+    axes(handles.secondFigure);
     % Parse the crop list
     cropListString = get(handles.cropsText, 'String');
     cropTuples = strsplit(cropListString, ';');
@@ -25,11 +25,23 @@ function y = outputCrops(handles)
     for i=1:1:numFiles
         curFile = FileName(i);
         impath = cell2mat(strcat(PathName, curFile));
-        image = imread(impath);
+        curFile = cell2mat(curFile);
+        curFile = curFile(1:end-4);
+        mkdir(outPath, curFile); % Move outside loop
+        info = imfinfo(impath);
+        num_images = numel(info);
         for j=1:1:size(cropList, 1)
-            cropPixels = [(cropList(j, 1)*100)-99, cropList(2)*100; (cropList(j, 2)*100)-99, cropList(2)*100];
-            crop = image(cropPixels(1,1):cropPixels(1,2), cropPixels(2,1):cropPixels(2,2));
-            % Save the crop 
+            for k=1:1:num_images
+                image = imread(impath, k);
+                cropPixels = [(cropList(j, 1)*100)-99, cropList(j, 1)*100; (cropList(j, 2)*100)-99, cropList(j, 2)*100];
+                crop = image(cropPixels(1,1):cropPixels(1,2), cropPixels(2,1):cropPixels(2,2));
+                % Save the crop 
+                
+                imshow(crop);
+                drawnow;
+                outputPath = strcat(outPath, '\', curFile, '\Crop', num2str(j),'.tif');
+                imwrite(crop, outputPath, 'writemode', 'append');
+            end
         end
     end
     
