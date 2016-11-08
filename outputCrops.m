@@ -45,4 +45,6 @@ function y = outputCrops(handles)
         end
     end
     
+    disp('Cropping Complete');
+    
 end
