@@ -52,11 +52,8 @@ function y = outputCrops(handles)
     set(handles.infoText, 'string', 'Done');
     disp('Cropping Complete');
     filename = 'Crop Data.xlsx';
-    xlData = {'Crop', 'Case', 'Block', 'Image', 'Notes'};
-    
+    A = {'Crop', 'Case', 'Block', 'Image', 'Notes'};
     for i=startNum:1:num_images
-        xlData = {xlData; i, '', '', '', ''};
+        A
     end
-    
-    xlswrite(filename,A);
 end

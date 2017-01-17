@@ -14,12 +14,14 @@ function y = Crop(flatPath, handles)
     cropY = size(flattened, 2);
     sizeX = floor(cropX/100)*100;
     sizeY = floor(cropY/100)*100;
+    offset = 100;
     % Sets the size of the matrix that will hold all of the crops
     cropsN = sizeX/100;
     cropsM = sizeY/100;
     
+    %flattened = flattened(101:sizeX - (100), 101:sizeY-(100), :);
+    display(size(flattened, 2));
     flattened = flattened(1:sizeX+1, 1:sizeY+1, :);
-    
     % Show the base image
     imshow(flattened);
     
@@ -60,6 +62,7 @@ for i = 1:1:(cropsN) % Will iterate through the height of the image
         currentCropNum = [i, j]; % Select the current crop
         % Choose pixels for the current crop
         currentCropPix = [100*currentCropNum(1)-99, 100*currentCropNum(1); 100*currentCropNum(2)-99, 100*currentCropNum(2)];
+        display(currentCropPix);
         currentCrop = flattened(currentCropPix(1,1):currentCropPix(1,2), currentCropPix(2,1):currentCropPix(2,2), :);
         % Run filter on current crop
             hWeight = 0; % This is the highest weight of the three crops layers
@@ -123,7 +126,9 @@ hold on;
 % Generate string list of crops
 cropListString = '';
 for i = 1:1:size(cropList, 1)
-    cropListString = strcat(cropListString, '(',num2str(cropList(i, 1)),',',num2str(cropList(i, 2)), ');');
+    if cropList(i, 1) > 1 && cropList(i, 2) < cropsM
+      cropListString = strcat(cropListString, '(',num2str(cropList(i, 1)),',',num2str(cropList(i, 2)), ');');
+    end
 end
 % Output the list of crops    
 set(handles.cropsText, 'string', cropListString);

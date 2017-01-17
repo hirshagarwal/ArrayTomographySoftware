@@ -1,1 +1,1 @@
-FindPeaks('samples/
+FindPeaks('samples/Crop1.tif')
