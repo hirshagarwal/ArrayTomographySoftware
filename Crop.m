@@ -127,7 +127,7 @@ hold on;
 % Generate string list of crops
 cropListString = '';
 for i = 1:1:size(cropList, 1)
-    if cropList(i, 1) > 1 && cropList(i, 2) < cropsM
+    if cropList(i, 1) > 1 && cropList(i, 2) < cropsM && cropList(i, 1) < cropsM && cropList(i, 2) > 1
       cropListString = strcat(cropListString, '(',num2str(cropList(i, 1)),',',num2str(cropList(i, 2)), ');');
     end
 end
