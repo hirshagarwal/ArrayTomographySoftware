@@ -47,8 +47,8 @@ function y = outputCrops(handles)
         imageNum = curFile(startIndexImage:endIndexImage);
         imageNum = imageNum(regexp(imageNum,'\d'):end);
         imBlockSection = strsplit(brokenPath{2}, '-');
-        imBlock = imBlockSection{3};
-        imBlock = imBlock(regexp(imBlock, '\d'):end);
+        imBlock = 0;
+%        imBlock = imBlock(regexp(imBlock, '\d'):end);
         
         % Crop the images
         for j=1:1:size(cropList, 1)
@@ -60,7 +60,11 @@ function y = outputCrops(handles)
                 
                 imshow(crop);
                 drawnow;
-                outputPath = strcat(outPath, '\crop', num2str(currentImageNum),'.tif');
+                if ismac
+                    outputPath = strcat(outPath, '/crop', num2str(currentImageNum),'.tif');
+                else
+                    outputPath = strcat(outPath, '\crop', num2str(currentImageNum),'.tif');
+                end
                 imshow(crop);
                 imwrite(crop, outputPath, 'writemode', 'append');
             end
@@ -73,8 +77,8 @@ function y = outputCrops(handles)
    
     disp('Cropping Complete');
     set(handles.infoText, 'string', 'Writing Excel File');
-    xlswrite(filename,xlData);
+    %xlswrite(filename,xlData);
     
-    disp('Excel File Written');
+    %disp('Excel File Written');
     set(handles.infoText, 'string', 'Done');
 end
