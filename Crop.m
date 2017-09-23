@@ -4,7 +4,7 @@ function y = Crop(flatPath, handles)
     disp(flatPath);
     % Setup the figure
     axes(handles.mainFigure);
-    
+   
     % Read the image
     flattened = imread(flatPath);
     
@@ -104,6 +104,7 @@ for i = 1:1:size(weights, 1)
 end
 
 % Overlay grid
+
 imshow(cropped);
 
 hold on;
